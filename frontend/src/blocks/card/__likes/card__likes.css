@@ -1,0 +1,11 @@
+.card__likes {
+    color: #000;
+    margin: 0px auto;
+    padding: 0px;
+    width: 10px;
+    height: 13px;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}

@@ -1,0 +1,12 @@
+.profile__info {
+    display: grid;
+    grid-template-columns: auto 0px;
+    gap: 7px 0px;
+    align-items: baseline;
+}
+
+@media screen and (min-width: 924px) {
+    .profile__info {
+        justify-items: flex-start;
+    }
+}

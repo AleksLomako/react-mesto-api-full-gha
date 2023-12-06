@@ -1,0 +1,7 @@
+.header__auth {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-start;
+    margin-top: 6px;
+}
