@@ -4,12 +4,15 @@ const { createUser, loginUser } = require('../controllers/users');
 const { validateLoginUser, validateRegisterUser } = require('../middlewares/validation');
 const auth = require('../middlewares/auth');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
+const corsMiddleware = require('../middlewares/corsMiddleware');
 const UserRouter = require('./users');
 const CardRouter = require('./cards');
 const NotFoundError = require('../errors/NotFoundError');
 
 // Логгер запросов
 router.use(requestLogger);
+
+router.use(corsMiddleware);
 
 router.post('/signin', validateLoginUser, loginUser);
 router.post('/signup', validateRegisterUser, createUser);
