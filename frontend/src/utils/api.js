@@ -12,6 +12,14 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
     }
 
+    setAuthorizationHeader(jwt) {
+        this._headers = {
+            ...this._headers,
+            authorization: `Bearer ${jwt}`,
+        };
+    }
+
+
     _request(url, options) {
         return fetch(url, options).then(this._checkResponse)
     }
@@ -24,6 +32,7 @@ class Api {
     }
 
     getUserInfo() {
+        console.log(this._headers);
         return this._request(`${this._baseUrl}/users/me`, { headers: this._headers })
             .then((result) => {
                 return result
@@ -105,9 +114,9 @@ class Api {
 }
 
 const api = new Api({
-    url: 'https://mesto.nomoreparties.co/v1/cohort-74',
+    url: 'https://api.alekslomako.mesto.nomoredomainsmonster.ru',
     headers: {
-        authorization: '85766c71-5b2d-4633-aac9-ecd12aeaf051',
+        // authorization: '85766c71-5b2d-4633-aac9-ecd12aeaf051',
         'Content-Type': 'application/json'
     }
 });

@@ -6,7 +6,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
-// const UnauthorizedError = require('../errors/UnauthorizedError');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Регистрация пользователя
@@ -63,9 +63,6 @@ const getCurrentUser = (req, res, next) => {
       if (error instanceof mongoose.Error.DocumentNotFoundError) {
         return next(new NotFoundError('Не найден пользователь с таким id'));
       }
-      // if (error instanceof mongoose.Error.CastError) {
-      //   return next(new BadRequestError('Передан некорректный id'));
-      // }
       return next(error);
     });
 };
