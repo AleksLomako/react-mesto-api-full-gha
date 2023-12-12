@@ -14,6 +14,12 @@ router.use(requestLogger);
 
 router.use(corsMiddleware);
 
+router.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 router.post('/signin', validateLoginUser, loginUser);
 router.post('/signup', validateRegisterUser, createUser);
 

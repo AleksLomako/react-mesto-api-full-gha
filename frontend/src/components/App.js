@@ -36,6 +36,62 @@ function App() {
   const [cards, setCards] = useState([]); //Инициализация карточек
   const [deletedCard, setDeletedCard] = useState(null);// Удаление карточки
 
+  //Обработчик проверки Токена
+  function tockenCheck() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.checkTocken(jwt)
+        .then((res) => {
+          if (res) {
+            setUserEmail(res.user.email);
+            setLoggedIn(true);
+            navigate('/', { replace: true })
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+  }
+
+  //Обработчик регистрации
+  function handleRegister(data) {
+    auth.register(data)
+      .then((res) => {
+        setIsSuccessRegistration(true);
+        handleSuccessRegistration();
+        navigate('/sign-in', { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsSuccessRegistration(false);
+      })
+  }
+
+  //Обработчик входа в приложение
+  function handleLogin(data) {
+    auth.authorize(data)
+      .then((res) => {
+        setLoggedIn(true);
+        setUserEmail(data.email);
+        localStorage.setItem('jwt', res.token);
+        navigate('/', { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoggedIn(false);
+        setIsSuccessRegistration(false);
+        handleSuccessRegistration();
+      })
+  }
+
+  //Обработчик выхода из приложения
+  function handleSignOut() {
+    localStorage.removeItem('jwt')
+    navigate('/signin', { replace: true })
+    setLoggedIn(false)
+  }
+
   //Проверка токена
   useEffect(() => {
     tockenCheck()
@@ -45,7 +101,7 @@ function App() {
   useEffect(() => {
     if (loggedIn) {
       api.getUserInfo().then(res => {
-        setCurrentUser(res)
+        setCurrentUser(res.user)
       })
         .catch((err) => {
           console.log(err);
@@ -103,7 +159,7 @@ function App() {
   }
   // Лайк и дизлайк карточки
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     if (!isLiked) {
       api.likeCard(card._id).then((newCard) => {
         setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)))
@@ -152,61 +208,6 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }
-  //Обработчик проверки Токена
-  function tockenCheck() {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      auth.checkTocken(jwt)
-        .then((res) => {
-          if (res) {
-            setUserEmail(res.data.email);
-            setLoggedIn(true);
-            navigate('/', { replace: true })
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-    }
-  }
-
-  //Обработчик регистрации
-  function handleRegister(data) {
-    auth.register(data)
-      .then((res) => {
-        setIsSuccessRegistration(true);
-        handleSuccessRegistration();
-        navigate('/sign-in', { replace: true });
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsSuccessRegistration(false);
-      })
-  }
-
-  //Обработчик входа в приложение
-  function handleLogin(data) {
-    auth.authorize(data)
-      .then((res) => {
-        setLoggedIn(true);
-        setUserEmail(data.email);
-        localStorage.setItem('jwt', res.token);
-        navigate('/', { replace: true });
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoggedIn(false);
-        setIsSuccessRegistration(false);
-        handleSuccessRegistration();
-      })
-  }
-
-  //Обработчик выхода из приложения
-  function handleSignOut() {
-    localStorage.removeItem('jwt')
-    navigate('/signin', { replace: true })
-    setLoggedIn(false)
   }
 
   return (

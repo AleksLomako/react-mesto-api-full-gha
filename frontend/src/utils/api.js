@@ -3,6 +3,11 @@ class Api {
         this._options = options;
         this._baseUrl = this._options.url;
         this._headers = options.headers;
+
+    }
+
+    setJwt() {
+        this._headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
     }
 
     _checkResponse(res) {
@@ -12,19 +17,12 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
     }
 
-    setAuthorizationHeader(jwt) {
-        this._headers = {
-            ...this._headers,
-            authorization: `Bearer ${jwt}`,
-        };
-    }
-
-
     _request(url, options) {
         return fetch(url, options).then(this._checkResponse)
     }
 
     getInitialCards() {
+        this.setJwt()
         return this._request(`${this._baseUrl}/cards`, { headers: this._headers })
             .then((result) => {
                 return result
@@ -32,7 +30,7 @@ class Api {
     }
 
     getUserInfo() {
-        console.log(this._headers);
+        this.setJwt()
         return this._request(`${this._baseUrl}/users/me`, { headers: this._headers })
             .then((result) => {
                 return result
@@ -48,22 +46,22 @@ class Api {
                 about: about
             })
         })
-        .then((result) => {
-            return result
-        })
+            .then((result) => {
+                return result
+            })
     }
 
     changeAvatar(link_avatar) {
-        return this._request(`${this._baseUrl}/users/me/avatar`,{
+        return this._request(`${this._baseUrl}/users/me/avatar`, {
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
                 avatar: link_avatar.avatar
             })
         })
-        .then((result) => {
-            return result
-        })
+            .then((result) => {
+                return result
+            })
     }
 
     addNewCard(name, link) {
@@ -75,48 +73,48 @@ class Api {
                 link: link
             })
         })
-        .then((result) => {
-            return result
-        })
+            .then((result) => {
+                return result
+            })
     }
 
     deleteCard(cardId) {
         return this._request(`${this._baseUrl}/cards/${cardId}`,
-        {
-            method: 'DELETE',
-            headers: this._headers
-        })
-        .then((result) => {
-            return result
-        })
+            {
+                method: 'DELETE',
+                headers: this._headers
+            })
+            .then((result) => {
+                return result
+            })
     }
 
     likeCard(cardId) {
         return this._request(`${this._baseUrl}/cards/${cardId}/likes`,
-        {
-            method: 'PUT',
-            headers: this._headers
-        })
-        .then((result) => {
-            return result
-        })
+            {
+                method: 'PUT',
+                headers: this._headers
+            })
+            .then((result) => {
+                return result
+            })
     }
 
     dislikeCard(cardId) {
         return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-            method: 'DELETE', 
+            method: 'DELETE',
             headers: this._headers
         })
-        .then((result) => {
-            return result
-        })
+            .then((result) => {
+                return result
+            })
     }
 }
 
 const api = new Api({
+
     url: 'https://api.alekslomako.mesto.nomoredomainsmonster.ru',
     headers: {
-        // authorization: '85766c71-5b2d-4633-aac9-ecd12aeaf051',
         'Content-Type': 'application/json'
     }
 });

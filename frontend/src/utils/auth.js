@@ -16,7 +16,6 @@ class Auth {
     }
 
     register(data) {
-        console.log("registration", data)
         return this._request(`${this._url}/signup`, {
             method: 'POST',
             headers: this._headers,
@@ -28,7 +27,6 @@ class Auth {
     }
 
     authorize(data) {
-        console.log("auth", data)
         return this._request(`${this._url}/signin`, {
             method: 'POST',
             headers: this._headers,
@@ -40,12 +38,10 @@ class Auth {
     }
 
     checkTocken(token) {
-        console.log(token);
         return this._request(`${this._url}/users/me`, {
             method: 'GET',
             headers: {
-                // headers: this._headers,
-                ...this._headers,
+                headers: this._headers,
                 Authorization: `Bearer ${token}`
             }
         })
